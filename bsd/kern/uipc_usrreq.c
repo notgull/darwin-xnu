@@ -2138,12 +2138,15 @@ fg_removeuipc(struct fileglob * fg)
 }
 
 /*
+ * Params:
+ *  	rights  		rights to transform into a file descriptor
+ *  	flags			flags to install into the file descriptor
  * Returns:	0			Success
  *		EMSGSIZE		The new fd's will not fit
  *		ENOBUFS			Cannot alloc struct fileproc
  */
 int
-unp_externalize(struct mbuf *rights)
+unp_externalize(struct mbuf *rights, int flags)
 {
 	proc_t p = current_proc();              /* XXX */
 	int i;
@@ -2200,6 +2203,7 @@ unp_externalize(struct mbuf *rights)
 			fileproc_l[i] = NULL;
 		}
 		procfdtbl_releasefd(p, f, fp);
+		p->p_fd->fd_ofileflags[fd] |= flags;
 		fds[i] = f;
 	}
 	proc_fdunlock(p);

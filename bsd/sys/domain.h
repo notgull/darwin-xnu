@@ -100,7 +100,7 @@ struct domain {
 	const char *dom_name;
 	void    (*dom_init)(void);      /* initialize domain data structures */
 	int     (*dom_externalize)      /* externalize access rights */
-	(struct mbuf *);
+	(struct mbuf *, int flags);
 	void    (*dom_dispose)          /* dispose of internalized rights */
 	(struct mbuf *);
 #ifdef XNU_KERNEL_PRIVATE
@@ -141,7 +141,7 @@ struct domain {
 	void    (*dom_init)             /* initialize domain data structures */
 	(struct domain *);
 	int     (*dom_externalize)      /* externalize access rights */
-	(struct mbuf *);
+	(struct mbuf *, int flags);
 	void    (*dom_dispose)          /* dispose of internalized rights */
 	(struct mbuf *);
 	int     (*dom_rtattach)         /* initialize routing table */

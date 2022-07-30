@@ -3152,7 +3152,11 @@ soreceive_ctl(struct socket *so, struct mbuf **controlp, int flags,
 			 * of the mbuf chain won't change.
 			 */
 			socket_unlock(so, 0);
-			error = (*pr->pr_domain->dom_externalize)(cm);
+			/* Add the O_CLOEXEC flag if the MSG_CMSG_CLOEXEC flag is set */
+			error = (*pr->pr_domain->dom_externalize)(
+				cm,
+				flags & MSG_CMSG_CLOEXEC != 0 ? UF_EXCLOSE : 0,
+			);
 			socket_lock(so, 0);
 		} else {
 			error = 0;
